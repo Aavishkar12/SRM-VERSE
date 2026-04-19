@@ -17,7 +17,8 @@ class MainActivity : ComponentActivity() {
             MaterialTheme(
                 colorScheme = if (isDark) darkColorScheme() else lightColorScheme()
             ) {
-                LoginScreen(
+
+                AppNavigation(
                     isDark = isDark,
                     onToggleTheme = { isDark = !isDark }
                 )
