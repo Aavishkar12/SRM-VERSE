@@ -6,7 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
 import androidx.navigation.NavHostController
-import com.yourapp.ui.screens.AttendanceScreen
+
 
 
 @Composable
@@ -38,7 +38,7 @@ fun AppNavigation(
 
             Scaffold(
                 bottomBar = {
-                    BottomBar(navController = bottomNavController)
+                    BottomBar(navController = bottomNavController, isDark = isDark)
                 }
             ) { padding ->
 
@@ -50,6 +50,10 @@ fun AppNavigation(
 
                     composable("attendance_main") {
                         AttendanceScreen(isDark = isDark)
+                    }
+
+                    composable("timetable") {
+                        TimetableScreen(isDark = isDark)
                     }
 
 

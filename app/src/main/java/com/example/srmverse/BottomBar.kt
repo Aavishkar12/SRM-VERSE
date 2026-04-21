@@ -6,13 +6,18 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
-fun BottomBar(navController: NavController) {
+fun BottomBar(navController: NavController, isDark: Boolean) {
 
     data class BottomItem(
         val route: String,
@@ -21,7 +26,7 @@ fun BottomBar(navController: NavController) {
     )
 
     val items = listOf(
-        BottomItem("attendance", "Attend", Icons.Default.CheckCircle),
+        BottomItem("attendance_main", "Attend", Icons.Default.CheckCircle),
         BottomItem("timetable", "Timetable", Icons.Default.Schedule),
         BottomItem("feed", "Feed", Icons.Default.DynamicFeed),
         BottomItem("marks", "Marks", Icons.Default.BarChart),
@@ -31,41 +36,54 @@ fun BottomBar(navController: NavController) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
 
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
-        tonalElevation = 8.dp,
-        modifier = Modifier.height(75.dp)
-    ) {
+    val containerColor = if (isDark) Color(0xFF121821) else Color.White
+    val selectedColor = Color(0xFF00E5FF)
+    val unselectedColor = Color(0xFF9AA4AE)
 
+    NavigationBar(
+        containerColor = containerColor,
+        tonalElevation = 0.dp,
+        modifier = Modifier
+            .navigationBarsPadding()
+            .height(80.dp),
+        windowInsets = WindowInsets(0, 0, 0, 0) // We handle padding via modifier
+    ) {
         items.forEach { item ->
+            val isSelected = currentRoute == item.route
 
             NavigationBarItem(
-                selected = currentRoute == item.route,
-
+                selected = isSelected,
                 onClick = {
-                    navController.navigate(item.route) {
-                        popUpTo("attendance")
-                        launchSingleTop = true
+                    if (currentRoute != item.route) {
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
                 },
-
                 icon = {
                     Icon(
                         imageVector = item.icon,
-                        contentDescription = item.label
+                        contentDescription = item.label,
+                        modifier = Modifier.size(24.dp)
                     )
                 },
-
                 label = {
-                    Text(text = item.label)
+                    Text(
+                        text = item.label,
+                        fontSize = 11.sp,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                    )
                 },
-
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color(0xFF00E5FF),
-                    selectedTextColor = Color(0xFF00E5FF),
-                    indicatorColor = Color(0xFF00E5FF).copy(alpha = 0.15f),
-                    unselectedIconColor = Color.Gray,
-                    unselectedTextColor = Color.Gray
+                    selectedIconColor = Color.Black,
+                    selectedTextColor = selectedColor,
+                    indicatorColor = selectedColor,
+                    unselectedIconColor = unselectedColor,
+                    unselectedTextColor = unselectedColor
                 )
             )
         }
