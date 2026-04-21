@@ -1,8 +1,13 @@
 package com.example.srmverse
 
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
 import androidx.navigation.NavHostController
+import com.yourapp.ui.screens.AttendanceScreen
+
 
 @Composable
 fun AppNavigation(
@@ -17,6 +22,7 @@ fun AppNavigation(
         startDestination = "login"
     ) {
 
+        // 🔐 LOGIN
         composable("login") {
             LoginScreen(
                 isDark = isDark,
@@ -25,12 +31,44 @@ fun AppNavigation(
             )
         }
 
+        // 📊 ATTENDANCE + BOTTOM NAV
+        composable("attendance") {
+
+            val bottomNavController = rememberNavController()
+
+            Scaffold(
+                bottomBar = {
+                    BottomBar(navController = bottomNavController)
+                }
+            ) { padding ->
+
+                NavHost(
+                    navController = bottomNavController,
+                    startDestination = "attendance_main",
+                    modifier = Modifier.padding(padding)
+                ) {
+
+                    composable("attendance_main") {
+                        AttendanceScreen(isDark = isDark)
+                    }
+
+
+
+
+
+                }
+            }
+        }
+
+        // 📜 PRIVACY
         composable("privacy") {
             PrivacyPolicyScreen(
                 isDark = isDark,
                 navController = navController
             )
         }
+
+        // 📞 CONTACT
         composable("contact") {
             ContactUsScreen(
                 isDark = isDark,

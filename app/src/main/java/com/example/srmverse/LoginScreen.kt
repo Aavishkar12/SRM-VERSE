@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.text.font.*
-import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -193,12 +192,27 @@ fun LoginScreen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
+                    // ✅ NEW GREEN FULL-WIDTH BUTTON
                     Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1ABC9C))
+                        onClick = {
+                            navController.navigate("attendance") {
+                                popUpTo("login") { inclusive = true }
+                            }
+                        },
+                        shape = RoundedCornerShape(50.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF22C1A1)
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(55.dp)
                     ) {
-                        Text("Sign in →", color = Color.White)
+                        Text(
+                            text = "Sign in →",
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
                 }
             }
