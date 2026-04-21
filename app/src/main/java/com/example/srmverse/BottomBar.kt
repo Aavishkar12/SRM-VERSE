@@ -26,7 +26,7 @@ fun BottomBar(navController: NavController, isDark: Boolean) {
     )
 
     val items = listOf(
-        BottomItem("attendance_main", "Attend", Icons.Default.CheckCircle),
+        BottomItem("attendance_main", "Attendance", Icons.Default.CheckCircle),
         BottomItem("timetable", "Timetable", Icons.Default.Schedule),
         BottomItem("feed", "Feed", Icons.Default.DynamicFeed),
         BottomItem("marks", "Marks", Icons.Default.BarChart),

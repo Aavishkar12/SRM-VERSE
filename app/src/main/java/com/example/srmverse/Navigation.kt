@@ -56,6 +56,18 @@ fun AppNavigation(
                         TimetableScreen(isDark = isDark)
                     }
 
+                    composable("feed") {
+                        FeedScreen(isDark = isDark)
+                    }
+
+                    composable("marks") {
+                        MarksScreen(isDark = isDark)
+                    }
+
+                    composable("calendar") {
+                        CalendarScreen(isDark = isDark)
+                    }
+
 
 
 
