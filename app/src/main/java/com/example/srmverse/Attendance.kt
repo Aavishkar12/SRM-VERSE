@@ -79,24 +79,60 @@ fun AttendanceScreen(isDark: Boolean) {
 @Composable
 fun AttendanceCard(data: Triple<String, Int, String>, isDark: Boolean) {
     val statusColor = when (data.third) { "SAFE" -> Color(0xFF00E676); "WARNING" -> Color(0xFFFFA000); else -> Color(0xFFFF5252) }
-    Card(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).drawBehind { drawLine(statusColor, Offset(0f, 0f), Offset(0f, size.height), 10f) }, colors = CardDefaults.cardColors(if (isDark) Color(0xFF111821) else Color.White), shape = RoundedCornerShape(16.dp)) {
-        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-            Column(modifier = Modifier.weight(1f)) {
-                Surface(color = Color(0xFF00BFA6).copy(0.1f), shape = RoundedCornerShape(6.dp), border = BorderStroke(0.5.dp, Color(0xFF00BFA6).copy(0.3f))) {
-                    Text("THEORY", color = Color(0xFF00BFA6), fontSize = 9.sp, fontWeight = FontWeight.Black, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
-                }
-                Spacer(Modifier.height(8.dp))
-                Text(data.first, color = if (isDark) Color.White else Color.Black, fontSize = 15.sp, fontWeight = FontWeight.Bold)
-                Spacer(Modifier.height(8.dp))
+    val boxBg = if (isDark) Color(0xFF162638) else Color(0xFFF0F4F8)
+
+    Card(
+        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)),
+        colors = CardDefaults.cardColors(if (isDark) Color(0xFF111821) else Color.White),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(boxBg, RoundedCornerShape(12.dp))
+                    .border(1.dp, Color.Gray.copy(0.1f), RoundedCornerShape(12.dp))
+                    .padding(16.dp)
+            ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("21MAB102T", color = Color(0xFF9AA4AE), fontSize = 12.sp)
-                    Text("  •  ", color = Color(0xFF9AA4AE))
-                    Text("Skip 2", color = Color(0xFF00CFE8), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Column(modifier = Modifier.weight(1f)) {
+                        Surface(
+                            color = Color(0xFF00BFA6).copy(0.1f),
+                            shape = RoundedCornerShape(6.dp),
+                            border = BorderStroke(0.5.dp, Color(0xFF00BFA6).copy(0.3f))
+                        ) {
+                            Text(
+                                "THEORY",
+                                color = Color(0xFF00BFA6),
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Black,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            data.first,
+                            color = if (isDark) Color.White else Color.Black,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("21MAB102T", color = Color(0xFF9AA4AE), fontSize = 12.sp)
+                            Text("  •  ", color = Color(0xFF9AA4AE))
+                            Text(
+                                "Skip 2",
+                                color = Color(0xFF00CFE8),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                    Box(Modifier.width(1.dp).height(50.dp).background(Color.Gray.copy(0.1f)))
+                    Spacer(Modifier.width(16.dp))
+                    CircularProgressBox(data.second, data.third, statusColor)
                 }
             }
-            Box(Modifier.width(1.dp).height(50.dp).background(Color.Gray.copy(0.1f)))
-            Spacer(Modifier.width(16.dp))
-            CircularProgressBox(data.second, data.third, statusColor)
         }
     }
 }

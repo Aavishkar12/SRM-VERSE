@@ -75,20 +75,109 @@ data class TimetableItem(val name: String, val faculty: String, val room: String
 @Composable
 fun TimetableCard(item: TimetableItem, isDark: Boolean) {
     val accentColor = Color(0xFF00BFA6)
-    Card(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).drawBehind { drawLine(accentColor.copy(0.5f), Offset(0f, 0f), Offset(0f, size.height), 10f) }, colors = CardDefaults.cardColors(if (isDark) Color(0xFF111821) else Color.White), shape = RoundedCornerShape(16.dp), border = BorderStroke(1.dp, Color.Gray.copy(0.1f))) {
-        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.width(55.dp)) {
-                Icon(Icons.Outlined.Schedule, null, tint = accentColor, modifier = Modifier.size(16.dp))
-                Spacer(Modifier.height(6.dp)); Text(item.startTime, color = if (isDark) Color.White else Color.Black, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                Text("to", color = Color(0xFF9AA4AE), fontSize = 10.sp); Text(item.endTime, color = if (isDark) Color.White else Color.Black, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+    val boxBg = if (isDark) Color(0xFF162638) else Color(0xFFF0F4F8)
+    
+    Card(
+        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)),
+        colors = CardDefaults.cardColors(if (isDark) Color(0xFF111821) else Color.White),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(boxBg, RoundedCornerShape(12.dp))
+                    .border(1.dp, Color.Gray.copy(0.1f), RoundedCornerShape(12.dp))
+                    .padding(16.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.width(65.dp)
+                    ) {
+                        Icon(
+                            Icons.Outlined.Schedule,
+                            null,
+                            tint = accentColor,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            item.startTime,
+                            color = if (isDark) Color.White else Color.Black,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                        Text(
+                            "to",
+                            color = Color(0xFF9AA4AE),
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            item.endTime,
+                            color = if (isDark) Color.White else Color.Black,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                    
+                    Spacer(Modifier.width(16.dp))
+                    Box(Modifier.width(1.dp).height(80.dp).background(Color.Gray.copy(0.15f)))
+                    Spacer(Modifier.width(16.dp))
+                    
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            item.name,
+                            color = if (isDark) Color.White else Color.Black,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            lineHeight = 20.sp
+                        )
+                        Spacer(Modifier.height(10.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Default.Person,
+                                null,
+                                tint = Color(0xFF9AA4AE),
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Spacer(Modifier.width(6.dp))
+                            Text(
+                                item.faculty,
+                                color = Color(0xFF9AA4AE),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                        Spacer(Modifier.height(6.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Default.LocationOn,
+                                null,
+                                tint = Color(0xFF9AA4AE),
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Spacer(Modifier.width(6.dp))
+                            Text(
+                                item.room,
+                                color = Color(0xFF9AA4AE),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                    
+                    Spacer(Modifier.width(10.dp))
+                    CircularProgressBox(
+                        item.percentage,
+                        item.fraction,
+                        if (item.percentage >= 84) Color(0xFF00E676) 
+                        else if (item.percentage >= 75) Color(0xFFFFA000) 
+                        else Color(0xFFFF5252)
+                    )
+                }
             }
-            Box(Modifier.width(1.dp).height(70.dp).background(Color.Gray.copy(0.15f)).padding(horizontal = 12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(item.name, color = if (isDark) Color.White else Color.Black, fontSize = 15.sp, fontWeight = FontWeight.Bold, lineHeight = 20.sp)
-                Spacer(Modifier.height(8.dp)); Row { Icon(Icons.Default.Person, null, tint = Color(0xFF9AA4AE), modifier = Modifier.size(13.dp)); Spacer(Modifier.width(6.dp)); Text(item.faculty, color = Color(0xFF9AA4AE), fontSize = 12.sp) }
-                Spacer(Modifier.height(6.dp)); Row { Icon(Icons.Default.LocationOn, null, tint = Color(0xFF9AA4AE), modifier = Modifier.size(13.dp)); Spacer(Modifier.width(6.dp)); Text(item.room, color = Color(0xFF9AA4AE), fontSize = 12.sp, lineHeight = 16.sp) }
-            }
-            CircularProgressBox(item.percentage, item.fraction, if (item.percentage >= 84) Color(0xFF00E676) else if (item.percentage >= 75) Color(0xFFFFA000) else Color(0xFFFF5252))
         }
     }
 }

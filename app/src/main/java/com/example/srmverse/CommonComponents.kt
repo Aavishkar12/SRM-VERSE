@@ -86,9 +86,11 @@ fun CircularProgressBox(percentage: Int, bottomText: String, statusColor: Color)
                 drawArc(statusColor.copy(alpha = 0.1f), 0f, 360f, false, style = Stroke(width = 6f))
                 drawArc(statusColor, -90f, (percentage / 100f) * 360f, false, style = Stroke(width = 6f, cap = StrokeCap.Round))
             }
-            Text("${percentage}%", color = statusColor, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            Text("${percentage}%", color = statusColor, fontSize = 11.sp, fontWeight = FontWeight.Bold)
         }
-        Spacer(Modifier.height(6.dp))
-        Text(bottomText, color = statusColor, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+        if (bottomText.isNotEmpty()) {
+            Spacer(Modifier.height(4.dp))
+            Text(bottomText, color = statusColor, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+        }
     }
 }

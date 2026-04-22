@@ -65,7 +65,7 @@ fun MarksScreen(isDark: Boolean) {
         }
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp)) {
-            items(listOf(MarksItem("Communicative English", "THEORY", "3 tests", "33/35 mks", 94, "O"), MarksItem("Semiconductor Physics and Computational Methods", "THEORY", "3 tests", "34.67/37 mks", 94, "O"), MarksItem("Object Oriented Design and Programming", "THEORY", "3 tests", "27.88/35 mks", 80, "A"), MarksItem("Engineering Graphics and Design", "PRACTICAL", "3 tests", "43/45 mks", 96, "O"), MarksItem("Constitution of India", "PRACTICAL", "2 tests", "60/80 mks", 75, "A"))) { item ->
+            items(listOf(MarksItem("Communicative English", "THEORY", "3 tests", "33/35", 94, "O"), MarksItem("Semiconductor Physics and Computational Methods", "THEORY", "3 tests", "34.67/37", 94, "O"), MarksItem("Object Oriented Design and Programming", "THEORY", "3 tests", "27.88/35", 80, "A"), MarksItem("Engineering Graphics and Design", "PRACTICAL", "3 tests", "43/45", 96, "O"), MarksItem("Constitution of India", "PRACTICAL", "2 tests", "60/80", 75, "A"))) { item ->
                 MarksCard(item, isDark)
             }
         }
@@ -77,18 +77,56 @@ data class MarksItem(val name: String, val type: String, val tests: String, val 
 @Composable
 fun MarksCard(item: MarksItem, isDark: Boolean) {
     val statusColor = when { item.percentage >= 84 -> Color(0xFF00E676); item.percentage >= 75 -> Color(0xFFFFA000); item.percentage > 0 -> Color(0xFFFF5252); else -> Color.Gray }
-    Card(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).drawBehind { drawLine(statusColor, Offset(0f, 0f), Offset(0f, size.height), 10f) }, colors = CardDefaults.cardColors(if (isDark) Color(0xFF111821) else Color.White), shape = RoundedCornerShape(16.dp)) {
-        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-            Column(modifier = Modifier.weight(1f)) {
-                Surface(color = Color(0xFF00BFA6).copy(0.1f), shape = RoundedCornerShape(6.dp), border = BorderStroke(0.5.dp, Color(0xFF00BFA6).copy(0.3f))) {
-                    Text(item.type, color = Color(0xFF00BFA6), fontSize = 9.sp, fontWeight = FontWeight.Black, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
+    val boxBg = if (isDark) Color(0xFF162638) else Color(0xFFF0F4F8)
+    
+    Card(
+        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)),
+        colors = CardDefaults.cardColors(if (isDark) Color(0xFF111821) else Color.White),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(boxBg, RoundedCornerShape(12.dp))
+                    .border(1.dp, Color.Gray.copy(0.1f), RoundedCornerShape(12.dp))
+                    .padding(16.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Surface(
+                            color = Color(0xFF00BFA6).copy(0.1f),
+                            shape = RoundedCornerShape(6.dp),
+                            border = BorderStroke(0.5.dp, Color(0xFF00BFA6).copy(0.3f))
+                        ) {
+                            Text(
+                                item.type,
+                                color = Color(0xFF00BFA6),
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Black,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
+                        Spacer(Modifier.height(12.dp))
+                        Text(
+                            item.name,
+                            color = if (isDark) Color.White else Color.Black,
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold,
+                            lineHeight = 22.sp
+                        )
+                        Spacer(Modifier.height(12.dp))
+                        Row {
+                            Text(item.tests, color = Color(0xFF9AA4AE), fontSize = 13.sp)
+                            Text("  •  ", color = Color(0xFF9AA4AE))
+                            Text(item.score, color = Color(0xFF9AA4AE), fontSize = 13.sp)
+                        }
+                    }
+                    Box(Modifier.width(1.dp).height(80.dp).background(Color.Gray.copy(0.15f)))
+                    Spacer(Modifier.width(20.dp))
+                    CircularProgressBox(item.percentage, "Grade: ${item.grade}", statusColor)
                 }
-                Spacer(Modifier.height(8.dp)); Text(item.name, color = if (isDark) Color.White else Color.Black, fontSize = 15.sp, fontWeight = FontWeight.Bold, lineHeight = 20.sp)
-                Spacer(Modifier.height(8.dp)); Row { Text(item.tests, color = Color(0xFF9AA4AE), fontSize = 12.sp); Text("  •  ", color = Color(0xFF9AA4AE)); Text(item.score, color = Color(0xFF9AA4AE), fontSize = 12.sp) }
             }
-            Box(Modifier.width(1.dp).height(60.dp).background(Color.Gray.copy(0.15f)))
-            Spacer(Modifier.width(16.dp))
-            CircularProgressBox(item.percentage, "Grade: ${item.grade}", statusColor)
         }
     }
 }
