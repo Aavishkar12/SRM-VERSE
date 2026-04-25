@@ -2,8 +2,6 @@ package com.example.srmverse
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -29,7 +27,6 @@ import androidx.compose.ui.unit.sp
 fun FeedScreen(isDark: Boolean) {
 
     val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF5F7FA)
-    val textPrimary = if (isDark) Color.White else Color.Black
     val textSecondary = Color(0xFF9AA4AE)
     val accentColor = Color(0xFF00CFE8)
     val chipContainerBg = if (isDark) Color(0xFF1A222B) else Color(0xFFEDEFF2)
@@ -41,73 +38,10 @@ fun FeedScreen(isDark: Boolean) {
             .fillMaxSize()
             .background(bgColor)
             .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
-        Spacer(Modifier.height(16.dp))
-
-        // 🔹 HEADER
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = if (isDark) Color(0xFF162638) else Color.White
-            ),
-            elevation = CardDefaults.cardElevation(if (isDark) 4.dp else 2.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .border(
-                                1.dp,
-                                Color(0xFF00BFA6).copy(alpha = 0.5f),
-                                RoundedCornerShape(10.dp)
-                            )
-                            .padding(8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ViewQuilt,
-                            contentDescription = null,
-                            tint = Color(0xFF00BFA6),
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-
-                    Spacer(Modifier.width(12.dp))
-
-                    Column {
-                        Text(
-                            "Feed",
-                            color = textPrimary,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            "Campus community feed",
-                            color = textSecondary,
-                            fontSize = 12.sp
-                        )
-                    }
-                }
-
-                Row {
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.Notifications, null, tint = textSecondary, modifier = Modifier.size(22.dp))
-                    }
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.Settings, null, tint = textSecondary, modifier = Modifier.size(22.dp))
-                    }
-                }
-            }
-        }
-
+        Spacer(Modifier.height(56.dp))
+        StandardHeader("Feed", "Campus community feed", isDark)
         Spacer(Modifier.height(20.dp))
 
         // 🔹 SUMMARY ROW
@@ -221,14 +155,12 @@ fun FeedScreen(isDark: Boolean) {
             )
         )
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(bottom = 100.dp)
-        ) {
-            items(feedItems) { item ->
-                FeedCard(item, isDark)
-            }
+        feedItems.forEach { item ->
+            FeedCard(item, isDark)
+            Spacer(Modifier.height(16.dp))
         }
+
+        Spacer(Modifier.height(100.dp))
     }
 }
 

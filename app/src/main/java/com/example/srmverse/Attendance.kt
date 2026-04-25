@@ -31,10 +31,14 @@ fun AttendanceScreen(isDark: Boolean) {
     var selectedType by remember { mutableStateOf("All") }
     var selectedStatus by remember { mutableStateOf("All") }
 
-    Column(modifier = Modifier.fillMaxSize().background(bgColor).padding(horizontal = 16.dp)) {
-        Spacer(Modifier.height(16.dp))
+    Column(modifier = Modifier.fillMaxSize().background(bgColor).padding(horizontal = 16.dp).verticalScroll(rememberScrollState())) {
+        Spacer(Modifier.height(56.dp))
         StandardHeader("Attendance", "Track your classes", isDark)
         Spacer(Modifier.height(20.dp))
+
+        SegmentedChips(listOf("All", "Theory", "Practical", "Predict"), selectedType, { selectedType = it }, isDark)
+
+        Spacer(Modifier.height(16.dp))
 
         OutlinedTextField(
             value = "", onValueChange = {},
@@ -46,14 +50,12 @@ fun AttendanceScreen(isDark: Boolean) {
         )
 
         Spacer(Modifier.height(16.dp))
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            SegmentedChips(listOf("All", "Theory", "Practical", "Predict"), selectedType, { selectedType = it }, isDark)
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                listOf("All", "Safe", "Low", "Critical").forEach { status ->
-                    val isSelected = selectedStatus == status
-                    Box(modifier = Modifier.weight(1f).height(38.dp).clip(RoundedCornerShape(30.dp)).background(if (isSelected) accentColor else chipContainerBg).border(1.dp, if (isSelected) accentColor else Color.Gray.copy(alpha = 0.1f), RoundedCornerShape(30.dp)).clickable { selectedStatus = status }, contentAlignment = Alignment.Center) {
-                        Text(status, color = if (isSelected) Color.Black else textSecondary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                    }
+
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            listOf("All", "Safe", "Low", "Critical").forEach { status ->
+                val isSelected = selectedStatus == status
+                Box(modifier = Modifier.weight(1f).height(38.dp).clip(RoundedCornerShape(30.dp)).background(if (isSelected) accentColor else chipContainerBg).border(1.dp, if (isSelected) accentColor else Color.Gray.copy(alpha = 0.1f), RoundedCornerShape(30.dp)).clickable { selectedStatus = status }, contentAlignment = Alignment.Center) {
+                    Text(status, color = if (isSelected) Color.Black else textSecondary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -68,11 +70,22 @@ fun AttendanceScreen(isDark: Boolean) {
             IconButton(onClick = {}, modifier = Modifier.size(32.dp).background(chipContainerBg, CircleShape)) { Icon(Icons.Outlined.Refresh, null, tint = accentColor, modifier = Modifier.size(18.dp)) }
         }
 
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(top = 12.dp, bottom = 100.dp)) {
-            items(listOf(Triple("Advanced Calculus and Complex Analysis", 76, "WARNING"), Triple("Semiconductor Physics and Computational Methods", 84, "SAFE"), Triple("Object Oriented Design and Programming", 77, "WARNING"), Triple("Engineering Graphics and Design", 80, "WARNING"), Triple("Environmental Science", 73, "CRITICAL"))) { data ->
-                AttendanceCard(data, isDark)
-            }
+        Spacer(Modifier.height(12.dp))
+        
+        val attendanceData = listOf(
+            Triple("Advanced Calculus and Complex Analysis", 76, "WARNING"),
+            Triple("Semiconductor Physics and Computational Methods", 84, "SAFE"),
+            Triple("Object Oriented Design and Programming", 77, "WARNING"),
+            Triple("Engineering Graphics and Design", 80, "WARNING"),
+            Triple("Environmental Science", 73, "CRITICAL")
+        )
+        
+        attendanceData.forEach { data ->
+            AttendanceCard(data, isDark)
+            Spacer(Modifier.height(12.dp))
         }
+        
+        Spacer(Modifier.height(100.dp))
     }
 }
 

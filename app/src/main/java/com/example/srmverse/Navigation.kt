@@ -1,13 +1,14 @@
 package com.example.srmverse
 
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.*
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
-
-
+import androidx.navigation.compose.*
 
 @Composable
 fun AppNavigation(
@@ -37,41 +38,40 @@ fun AppNavigation(
             val bottomNavController = rememberNavController()
 
             Scaffold(
+                containerColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF5F7FA),
                 bottomBar = {
                     BottomBar(navController = bottomNavController, isDark = isDark)
                 }
             ) { padding ->
+                // We use Box with fillMaxSize and ignore padding to allow the content 
+                // to flow behind the floating bottom bar
+                Box(modifier = Modifier.fillMaxSize()) {
+                    NavHost(
+                        navController = bottomNavController,
+                        startDestination = "attendance_main",
+                        modifier = Modifier.fillMaxSize()
+                    ) {
 
-                NavHost(
-                    navController = bottomNavController,
-                    startDestination = "attendance_main",
-                    modifier = Modifier.padding(padding)
-                ) {
+                        composable("attendance_main") {
+                            AttendanceScreen(isDark = isDark)
+                        }
 
-                    composable("attendance_main") {
-                        AttendanceScreen(isDark = isDark)
+                        composable("timetable") {
+                            TimetableScreen(isDark = isDark)
+                        }
+
+                        composable("feed") {
+                            FeedScreen(isDark = isDark)
+                        }
+
+                        composable("marks") {
+                            MarksScreen(isDark = isDark)
+                        }
+
+                        composable("calendar") {
+                            CalendarScreen(isDark = isDark)
+                        }
                     }
-
-                    composable("timetable") {
-                        TimetableScreen(isDark = isDark)
-                    }
-
-                    composable("feed") {
-                        FeedScreen(isDark = isDark)
-                    }
-
-                    composable("marks") {
-                        MarksScreen(isDark = isDark)
-                    }
-
-                    composable("calendar") {
-                        CalendarScreen(isDark = isDark)
-                    }
-
-
-
-
-
                 }
             }
         }

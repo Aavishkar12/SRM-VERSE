@@ -1,20 +1,29 @@
 package com.example.srmverse
 
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.Assignment
+import androidx.compose.material.icons.outlined.Event
+import androidx.compose.material.icons.outlined.HistoryEdu
+import androidx.compose.material.icons.outlined.Newspaper
+import androidx.compose.material.icons.outlined.WatchLater
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun BottomBar(navController: NavController, isDark: Boolean) {
@@ -25,67 +34,88 @@ fun BottomBar(navController: NavController, isDark: Boolean) {
         val icon: androidx.compose.ui.graphics.vector.ImageVector
     )
 
+    // Icons kept exactly as requested
     val items = listOf(
-        BottomItem("attendance_main", "Attendance", Icons.Default.CheckCircle),
-        BottomItem("timetable", "Timetable", Icons.Default.Schedule),
-        BottomItem("feed", "Feed", Icons.Default.DynamicFeed),
-        BottomItem("marks", "Marks", Icons.Default.BarChart),
-        BottomItem("calendar", "Calendar", Icons.Default.CalendarMonth)
+        BottomItem("attendance_main", "Attend", Icons.AutoMirrored.Filled.Assignment),
+        BottomItem("timetable", "Timetable", Icons.Outlined.WatchLater),
+        BottomItem("feed", "Home", Icons.Outlined.Newspaper),
+        BottomItem("marks", "Marks", Icons.Outlined.HistoryEdu),
+        BottomItem("calendar", "Calendar", Icons.Outlined.Event)
     )
 
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
 
-    val containerColor = if (isDark) Color(0xFF121821) else Color.White
-    val selectedColor = Color(0xFF00E5FF)
+    val barBgColor = if (isDark) Color(0xFF161C24).copy(alpha = 0.9f) else Color.White.copy(alpha = 0.9f)
+    val selectedColor = Color(0xFF00CFE8)
     val unselectedColor = Color(0xFF9AA4AE)
+    val itemBgSelected = if (isDark) Color(0xFF22364A) else Color(0xFFEDF2F7)
 
-    NavigationBar(
-        containerColor = containerColor,
-        tonalElevation = 0.dp,
+    Box(
         modifier = Modifier
+            .fillMaxWidth()
             .navigationBarsPadding()
-            .height(80.dp),
-        windowInsets = WindowInsets(0, 0, 0, 0) // We handle padding via modifier
+            .padding(bottom = 24.dp, start = 16.dp, end = 16.dp),
+        contentAlignment = Alignment.BottomCenter
     ) {
-        items.forEach { item ->
-            val isSelected = currentRoute == item.route
-
-            NavigationBarItem(
-                selected = isSelected,
-                onClick = {
-                    if (currentRoute != item.route) {
-                        navController.navigate(item.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
+        Surface(
+            color = barBgColor,
+            shape = RoundedCornerShape(24.dp),
+            shadowElevation = 8.dp,
+            border = BorderStroke(1.dp, Color.Gray.copy(alpha = 0.15f))
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(72.dp)
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                items.forEach { item ->
+                    val isSelected = currentRoute == item.route
+                    
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp)
+                            .padding(horizontal = 4.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(if (isSelected) itemBgSelected else Color.Transparent)
+                            .clickable {
+                                if (currentRoute != item.route) {
+                                    navController.navigate(item.route) {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                }
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.label,
+                                modifier = Modifier.size(22.dp),
+                                tint = if (isSelected) selectedColor else unselectedColor
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = item.label,
+                                fontSize = 10.sp,
+                                color = if (isSelected) selectedColor else unselectedColor,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                            )
                         }
                     }
-                },
-                icon = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = item.label,
-                        modifier = Modifier.size(24.dp)
-                    )
-                },
-                label = {
-                    Text(
-                        text = item.label,
-                        fontSize = 11.sp,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-                    )
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.Black,
-                    selectedTextColor = selectedColor,
-                    indicatorColor = selectedColor,
-                    unselectedIconColor = unselectedColor,
-                    unselectedTextColor = unselectedColor
-                )
-            )
+                }
+            }
         }
     }
 }

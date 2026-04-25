@@ -31,8 +31,8 @@ fun MarksScreen(isDark: Boolean) {
     var selectedType by remember { mutableStateOf("All") }
     var selectedStatus by remember { mutableStateOf("All") }
 
-    Column(modifier = Modifier.fillMaxSize().background(bgColor).padding(horizontal = 16.dp)) {
-        Spacer(Modifier.height(16.dp))
+    Column(modifier = Modifier.fillMaxSize().background(bgColor).padding(horizontal = 16.dp).verticalScroll(rememberScrollState())) {
+        Spacer(Modifier.height(56.dp))
         StandardHeader("Marks", "Your internal scores", isDark)
         Spacer(Modifier.height(20.dp))
 
@@ -64,11 +64,20 @@ fun MarksScreen(isDark: Boolean) {
             }
         }
 
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp)) {
-            items(listOf(MarksItem("Communicative English", "THEORY", "3 tests", "33/35", 94, "O"), MarksItem("Semiconductor Physics and Computational Methods", "THEORY", "3 tests", "34.67/37", 94, "O"), MarksItem("Object Oriented Design and Programming", "THEORY", "3 tests", "27.88/35", 80, "A"), MarksItem("Engineering Graphics and Design", "PRACTICAL", "3 tests", "43/45", 96, "O"), MarksItem("Constitution of India", "PRACTICAL", "2 tests", "60/80", 75, "A"))) { item ->
-                MarksCard(item, isDark)
-            }
+        val marksItems = listOf(
+            MarksItem("Communicative English", "THEORY", "3 tests", "33/35", 94, "O"),
+            MarksItem("Semiconductor Physics and Computational Methods", "THEORY", "3 tests", "34.67/37", 94, "O"),
+            MarksItem("Object Oriented Design and Programming", "THEORY", "3 tests", "27.88/35", 80, "A"),
+            MarksItem("Engineering Graphics and Design", "PRACTICAL", "3 tests", "43/45", 96, "O"),
+            MarksItem("Constitution of India", "PRACTICAL", "2 tests", "60/80", 75, "A")
+        )
+
+        marksItems.forEach { item ->
+            MarksCard(item, isDark)
+            Spacer(Modifier.height(12.dp))
         }
+
+        Spacer(Modifier.height(100.dp))
     }
 }
 
@@ -80,20 +89,21 @@ fun MarksCard(item: MarksItem, isDark: Boolean) {
     val boxBg = if (isDark) Color(0xFF162638) else Color(0xFFF0F4F8)
     
     Card(
-        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
         colors = CardDefaults.cardColors(if (isDark) Color(0xFF111821) else Color.White),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(boxBg, RoundedCornerShape(12.dp))
-                    .border(1.dp, Color.Gray.copy(0.1f), RoundedCornerShape(12.dp))
-                    .padding(16.dp)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Column(modifier = Modifier.weight(1f)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(boxBg, RoundedCornerShape(16.dp))
+                .border(1.dp, Color.Gray.copy(0.1f), RoundedCornerShape(16.dp))
+                .padding(16.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Surface(
                             color = Color(0xFF00BFA6).copy(0.1f),
                             shape = RoundedCornerShape(6.dp),
@@ -102,30 +112,34 @@ fun MarksCard(item: MarksItem, isDark: Boolean) {
                             Text(
                                 item.type,
                                 color = Color(0xFF00BFA6),
-                                fontSize = 10.sp,
+                                fontSize = 9.sp,
                                 fontWeight = FontWeight.Black,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                             )
                         }
-                        Spacer(Modifier.height(12.dp))
+                        Spacer(Modifier.width(10.dp))
                         Text(
                             item.name,
                             color = if (isDark) Color.White else Color.Black,
-                            fontSize = 17.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
-                            lineHeight = 22.sp
+                            lineHeight = 18.sp,
+                            maxLines = 2
                         )
-                        Spacer(Modifier.height(12.dp))
-                        Row {
-                            Text(item.tests, color = Color(0xFF9AA4AE), fontSize = 13.sp)
-                            Text("  •  ", color = Color(0xFF9AA4AE))
-                            Text(item.score, color = Color(0xFF9AA4AE), fontSize = 13.sp)
-                        }
                     }
-                    Box(Modifier.width(1.dp).height(80.dp).background(Color.Gray.copy(0.15f)))
-                    Spacer(Modifier.width(20.dp))
-                    CircularProgressBox(item.percentage, "Grade: ${item.grade}", statusColor)
+                    Spacer(Modifier.height(8.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.Analytics, null, tint = Color(0xFF9AA4AE), modifier = Modifier.size(12.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text(item.tests, color = Color(0xFF9AA4AE), fontSize = 11.sp)
+                        Text("  •  ", color = Color(0xFF9AA4AE))
+                        Text(item.score, color = Color(0xFF9AA4AE), fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                    }
                 }
+                Spacer(Modifier.width(16.dp))
+                Box(Modifier.width(1.dp).height(50.dp).background(Color.Gray.copy(0.15f)))
+                Spacer(Modifier.width(16.dp))
+                CircularProgressBox(item.percentage, "Grade: ${item.grade}", statusColor)
             }
         }
     }
