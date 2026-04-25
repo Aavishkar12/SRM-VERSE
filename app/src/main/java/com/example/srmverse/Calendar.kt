@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CalendarScreen(isDark: Boolean) {
+fun CalendarScreen(isDark: Boolean, onMenuClick: () -> Unit) {
 
     val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF5F7FA)
     val textPrimary = if (isDark) Color.White else Color.Black
@@ -40,7 +40,7 @@ fun CalendarScreen(isDark: Boolean) {
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(Modifier.height(8.dp))
-        StandardHeader("Calendar", "Day orders & events", isDark)
+        StandardHeader("Calendar", "Day orders & events", isDark, onMenuClick)
         Spacer(Modifier.height(12.dp))
 
         // 🔹 SUMMARY ROW
@@ -209,7 +209,7 @@ fun CalendarScreen(isDark: Boolean) {
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         modifier = Modifier
                                             .fillMaxSize()
-                                            .padding(2.dp)
+                                            .padding(1.dp)
                                             .clip(RoundedCornerShape(8.dp))
                                             .background(
                                                 when {
@@ -219,7 +219,6 @@ fun CalendarScreen(isDark: Boolean) {
                                                     else -> Color.Transparent
                                                 }
                                             )
-                                            .padding(vertical = 4.dp)
                                     ) {
                                         Text(
                                             text = day.toString(),
@@ -228,23 +227,22 @@ fun CalendarScreen(isDark: Boolean) {
                                                 isHoliday -> Color(0xFFFF5252)
                                                 else -> textPrimary
                                             },
-                                            fontSize = 14.sp,
+                                            fontSize = 13.sp,
                                             fontWeight = if (isToday) FontWeight.Bold else FontWeight.Medium,
-                                            lineHeight = 14.sp
+                                            modifier = Modifier.padding(top = 2.dp)
                                         )
                                         
                                         if (!isWeekend) {
                                             Text(
                                                 text = "D${(day % 5) + 1}",
                                                 color = if (isToday) Color.Black.copy(alpha = 0.7f) else textSecondary,
-                                                fontSize = 10.sp,
-                                                lineHeight = 10.sp
+                                                fontSize = 9.sp,
+                                                lineHeight = 9.sp
                                             )
                                         }
 
                                         if (isHoliday) {
-                                            Spacer(Modifier.height(2.dp))
-                                            Box(Modifier.size(4.dp).background(Color(0xFFFF5252), CircleShape))
+                                            Box(Modifier.size(3.dp).background(Color(0xFFFF5252), CircleShape))
                                         }
                                     }
                                 }

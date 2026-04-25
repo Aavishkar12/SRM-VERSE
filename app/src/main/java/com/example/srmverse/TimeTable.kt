@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 
 @Composable
-fun TimetableScreen(isDark: Boolean) {
+fun TimetableScreen(isDark: Boolean, onMenuClick: () -> Unit) {
     val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF5F7FA)
     val textPrimary = if (isDark) Color.White else Color.Black
     val textSecondary = Color(0xFF9AA4AE)
@@ -31,7 +31,7 @@ fun TimetableScreen(isDark: Boolean) {
 
     Column(modifier = Modifier.fillMaxSize().background(bgColor).padding(horizontal = 16.dp).verticalScroll(rememberScrollState())) {
         Spacer(Modifier.height(12.dp))
-        StandardHeader("Timetable", "Your weekly schedule", isDark)
+        StandardHeader("Timetable", "Your weekly schedule", isDark, onMenuClick)
         Spacer(Modifier.height(12.dp))
 
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -66,7 +66,9 @@ fun TimetableScreen(isDark: Boolean) {
 
         val timetableItems = listOf(
             TimetableItem("Electrical and Electronics Engineering", "Dr.Y.Jeyashree", "Room 822", "08:00", "09:40", 78, "40/51"),
-            TimetableItem("Semiconductor Physics and Computational Methods", "Dr. Tusharbhai Himmatbhai Rana", "Room 822", "10:40", "11:30", 84, "38/45")
+            TimetableItem("Semiconductor Physics and Computational Methods", "Dr. Tusharbhai Himmatbhai Rana", "Room 822", "10:40", "11:30", 84, "38/45"),
+            TimetableItem("Advanced Calculus and Complex Analysis", "Dr. D.K.Sheena Christy", "Room 822", "11:35", "12:25", 76, "39/51"),
+            TimetableItem("Engineering Graphics and Design", "Dr. Vamsi Krishna Dommeti", "Room BEL 508, Basic Engineering Lab", "13:25", "16:50", 80, "35/44")
         )
 
         timetableItems.forEach { item ->

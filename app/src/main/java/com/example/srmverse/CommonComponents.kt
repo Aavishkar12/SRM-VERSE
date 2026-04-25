@@ -2,12 +2,15 @@ package com.example.srmverse
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.automirrored.filled.ViewQuilt
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,19 +19,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun StandardHeader(title: String, subtitle: String, isDark: Boolean) {
-    val textPrimary = if (isDark) Color.White else Color.Black
-    val textSecondary = Color(0xFF9AA4AE)
+fun StandardHeader(title: String, subtitle: String, isDark: Boolean, onMenuClick: () -> Unit) {
+    val textPrimary = if (isDark) Color.White else Color(0xFF1A1C1E)
+    val textSecondary = if (isDark) Color(0xFF9AA4AE) else Color(0xFF74777F)
+    val headerCardBg = if (isDark) Color(0xFF162638) else Color.White
+    
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = if (isDark) Color(0xFF162638) else Color.White),
-        elevation = CardDefaults.cardElevation(if (isDark) 4.dp else 2.dp)
+        colors = CardDefaults.cardColors(containerColor = headerCardBg),
+        elevation = CardDefaults.cardElevation(defaultElevation = if (isDark) 4.dp else 1.dp),
+        border = if (!isDark) BorderStroke(1.dp, Color(0xFFE1E2EC)) else null
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(12.dp),
@@ -37,7 +44,11 @@ fun StandardHeader(title: String, subtitle: String, isDark: Boolean) {
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
-                    modifier = Modifier.size(40.dp).border(1.dp, Color(0xFF00BFA6).copy(alpha = 0.5f), RoundedCornerShape(10.dp)).padding(8.dp),
+                    modifier = Modifier
+                        .size(40.dp)
+                        .border(1.dp, Color(0xFF00BFA6).copy(alpha = 0.5f), RoundedCornerShape(10.dp))
+                        .padding(8.dp)
+                        .clickable { onMenuClick() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ViewQuilt, null, tint = Color(0xFF00BFA6), modifier = Modifier.size(24.dp))
@@ -58,21 +69,34 @@ fun StandardHeader(title: String, subtitle: String, isDark: Boolean) {
 
 @Composable
 fun SegmentedChips(options: List<String>, selected: String, onSelect: (String) -> Unit, isDark: Boolean) {
-    val chipContainerBg = if (isDark) Color(0xFF1A222B) else Color(0xFFEDEFF2)
-    val accentColor = Color(0xFF00CFE8)
+    val chipContainerBg = if (isDark) Color(0xFF1A222B) else Color(0xFFF1F5F9)
+    val accentColor = if (isDark) Color(0xFF00CFE8) else Color(0xFF00BFA6)
     Row(
-        modifier = Modifier.fillMaxWidth().height(44.dp).background(chipContainerBg, RoundedCornerShape(30.dp)).border(1.dp, Color.Gray.copy(alpha = 0.1f), RoundedCornerShape(30.dp)).padding(4.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(44.dp)
+            .background(chipContainerBg, RoundedCornerShape(30.dp))
+            .border(1.dp, if (isDark) Color.Gray.copy(alpha = 0.1f) else Color(0xFFE1E2EC), RoundedCornerShape(30.dp))
+            .padding(4.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         options.forEach { option ->
             val isSelected = selected == option
             Box(
-                modifier = Modifier.weight(1f).fillMaxHeight().clip(RoundedCornerShape(30.dp))
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(30.dp))
                     .background(if (isSelected) (if (isDark) Color(0xFF22364A) else Color.White) else Color.Transparent)
                     .clickable { onSelect(option) },
                 contentAlignment = Alignment.Center
             ) {
-                Text(option, color = if (isSelected) accentColor else Color(0xFF9AA4AE), fontSize = 12.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium)
+                Text(
+                    option, 
+                    color = if (isSelected) accentColor else (if (isDark) Color(0xFF9AA4AE) else Color(0xFF44474E)), 
+                    fontSize = 12.sp, 
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                )
             }
         }
     }
@@ -83,14 +107,145 @@ fun CircularProgressBox(percentage: Int, bottomText: String, statusColor: Color)
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         Box(contentAlignment = Alignment.Center) {
             Canvas(modifier = Modifier.size(50.dp)) {
-                drawArc(statusColor.copy(alpha = 0.1f), 0f, 360f, false, style = Stroke(width = 6f))
-                drawArc(statusColor, -90f, (percentage / 100f) * 360f, false, style = Stroke(width = 6f, cap = StrokeCap.Round))
+                drawArc(color = statusColor.copy(alpha = 0.1f), startAngle = 0f, sweepAngle = 360f, useCenter = false, style = Stroke(width = 6f))
+                drawArc(color = statusColor, startAngle = -90f, sweepAngle = (percentage / 100f) * 360f, useCenter = false, style = Stroke(width = 6f, cap = StrokeCap.Round))
             }
-            Text("${percentage}%", color = statusColor, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+            Text("$percentage%", color = statusColor, fontSize = 11.sp, fontWeight = FontWeight.Bold)
         }
         if (bottomText.isNotEmpty()) {
             Spacer(Modifier.height(4.dp))
             Text(bottomText, color = statusColor, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+@Composable
+fun AppDrawer(
+    isDark: Boolean,
+    onNavigate: (String) -> Unit,
+    onClose: () -> Unit,
+    onSignOut: () -> Unit
+) {
+    val bgColor = if (isDark) Color(0xFF0B1218) else Color(0xFFFDFBFF)
+    val textPrimary = if (isDark) Color.White else Color(0xFF1A1C1E)
+    val textSecondary = if (isDark) Color(0xFF9AA4AE) else Color(0xFF74777F)
+    val accentColor = Color(0xFF00BFA6)
+
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(0.8f)
+            .background(bgColor)
+            .statusBarsPadding()
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = null,
+                    modifier = Modifier.size(32.dp).clip(RoundedCornerShape(8.dp))
+                )
+                Spacer(Modifier.width(12.dp))
+                Text("SRM VERSE", color = accentColor, fontWeight = FontWeight.ExtraBold, fontSize = 18.sp)
+            }
+            IconButton(onClick = onClose) { Icon(Icons.Default.Close, null, tint = textSecondary) }
+        }
+
+        Spacer(Modifier.height(24.dp))
+
+        Card(
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = if (isDark) Color(0xFF162638) else Color(0xFFF1F4F9)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                Box(modifier = Modifier.size(45.dp).clip(CircleShape).background(Color.Gray))
+                Spacer(Modifier.width(12.dp))
+                Column {
+                    Text("Aavishkar Singh", color = textPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Text("Student", color = textSecondary, fontSize = 11.sp)
+                }
+            }
+        }
+
+        Spacer(Modifier.height(24.dp))
+
+        LazyColumn(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            // ACADEMICS
+            item { DrawerSectionHeader("ACADEMICS", textSecondary) }
+            items(listOf(
+                Triple("Attendance", Icons.Default.CheckCircle, "attendance_main"),
+                Triple("Marks", Icons.Default.BarChart, "marks"),
+                Triple("Timetable", Icons.Default.Schedule, "timetable"),
+                Triple("Calendar", Icons.Default.CalendarMonth, "calendar")
+            )) { item ->
+                DrawerItem(item.first, item.second, isDark) { onNavigate(item.third) }
+            }
+
+            // DISCOVER
+            item { Spacer(Modifier.height(16.dp)); DrawerSectionHeader("DISCOVER", textSecondary) }
+            item { DrawerItem("Dashboard", Icons.Default.Dashboard, isDark, {}) }
+            items(listOf(
+                Triple("E-Library", Icons.AutoMirrored.Filled.MenuBook, "elibrary"),
+                Triple("Internships", Icons.Default.Work, "internships"),
+                Triple("Hackathons", Icons.Default.EmojiEvents, ""),
+                Triple("Team Finder", Icons.Default.Groups, ""),
+                Triple("Conferences", Icons.AutoMirrored.Filled.MenuBook, ""),
+                Triple("Tech News", Icons.Default.Newspaper, "")
+            )) { item ->
+                DrawerItem(item.first, item.second, isDark) {
+                    if (item.third.isNotEmpty()) onNavigate(item.third)
+                }
+            }
+
+            // CAMPUS REGISTRY
+            item { Spacer(Modifier.height(16.dp)); DrawerSectionHeader("CAMPUS REGISTRY", textSecondary) }
+            item { DrawerItem("Marketplace", Icons.Default.LocalOffer, isDark, {}) }
+            
+            // Sign Out
+            item { 
+                Spacer(Modifier.height(16.dp))
+                DrawerItem("Sign Out", Icons.AutoMirrored.Filled.Logout, isDark, onSignOut) 
+            }
+        }
+        
+        Spacer(Modifier.height(16.dp))
+    }
+}
+
+@Composable
+fun DrawerSectionHeader(title: String, color: Color) {
+    Text(title, color = color, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.padding(start = 12.dp, top = 8.dp, bottom = 4.dp))
+}
+
+@Composable
+fun DrawerItem(label: String, icon: androidx.compose.ui.graphics.vector.ImageVector, isDark: Boolean, onClick: () -> Unit) {
+    val itemBg = if (isDark) Color(0xFF162638).copy(alpha = 0.5f) else Color(0xFFF1F4F9).copy(alpha = 0.5f)
+    val textPrimary = if (isDark) Color.White else Color(0xFF1A1C1E)
+    val accentColor = if (isDark) Color(0xFF00CFE8) else Color(0xFF00BFA6)
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp, vertical = 2.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .clickable { onClick() },
+        color = itemBg,
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(0.5.dp, if (isDark) Color.White.copy(alpha = 0.05f) else Color.Gray.copy(alpha = 0.1f))
+    ) {
+        Row(
+            modifier = Modifier.padding(vertical = 12.dp, horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(icon, null, tint = accentColor, modifier = Modifier.size(20.dp))
+            Spacer(Modifier.width(16.dp))
+            Text(label, color = textPrimary, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
         }
     }
 }

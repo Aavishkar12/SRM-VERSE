@@ -2,7 +2,6 @@ package com.example.srmverse
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,20 +20,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 
 @Composable
-fun AttendanceScreen(isDark: Boolean) {
-    val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF5F7FA)
-    val textPrimary = if (isDark) Color.White else Color.Black
-    val textSecondary = Color(0xFF9AA4AE)
-    val accentColor = Color(0xFF00CFE8)
-    val chipContainerBg = if (isDark) Color(0xFF1A222B) else Color(0xFFEDEFF2)
+fun AttendanceScreen(isDark: Boolean, onMenuClick: () -> Unit) {
+    val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF8FAFD)
+    val textPrimary = if (isDark) Color.White else Color(0xFF1A1C1E)
+    val textSecondary = if (isDark) Color(0xFF9AA4AE) else Color(0xFF74777F)
+    val accentColor = if (isDark) Color(0xFF00CFE8) else Color(0xFF00BFA6)
+    val chipContainerBg = if (isDark) Color(0xFF1A222B) else Color(0xFFF1F5F9)
 
     var selectedType by remember { mutableStateOf("All") }
     var selectedStatus by remember { mutableStateOf("All") }
 
     Column(modifier = Modifier.fillMaxSize().background(bgColor).padding(horizontal = 16.dp).verticalScroll(rememberScrollState())) {
-        Spacer(Modifier.height(8.dp))
-        StandardHeader("Attendance", "Track your classes", isDark)
         Spacer(Modifier.height(12.dp))
+        StandardHeader("Attendance", "Track your classes", isDark, onMenuClick)
+        Spacer(Modifier.height(20.dp))
 
         SegmentedChips(listOf("All", "Theory", "Practical", "Predict"), selectedType, { selectedType = it }, isDark)
 
@@ -46,7 +45,15 @@ fun AttendanceScreen(isDark: Boolean) {
             leadingIcon = { Icon(Icons.Default.Search, null, tint = textSecondary, modifier = Modifier.size(20.dp)) },
             modifier = Modifier.fillMaxWidth().height(52.dp),
             shape = RoundedCornerShape(30.dp),
-            colors = TextFieldDefaults.colors(unfocusedContainerColor = chipContainerBg, focusedContainerColor = chipContainerBg, unfocusedIndicatorColor = Color.Gray.copy(alpha = 0.1f), focusedIndicatorColor = accentColor.copy(alpha = 0.5f), cursorColor = accentColor, focusedTextColor = textPrimary, unfocusedTextColor = textPrimary)
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = chipContainerBg, 
+                focusedContainerColor = chipContainerBg, 
+                unfocusedIndicatorColor = Color.Transparent, 
+                focusedIndicatorColor = accentColor.copy(alpha = 0.5f), 
+                cursorColor = accentColor, 
+                focusedTextColor = textPrimary, 
+                unfocusedTextColor = textPrimary
+            )
         )
 
         Spacer(Modifier.height(16.dp))
@@ -54,7 +61,16 @@ fun AttendanceScreen(isDark: Boolean) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             listOf("All", "Safe", "Low", "Critical").forEach { status ->
                 val isSelected = selectedStatus == status
-                Box(modifier = Modifier.weight(1f).height(38.dp).clip(RoundedCornerShape(30.dp)).background(if (isSelected) accentColor else chipContainerBg).border(1.dp, if (isSelected) accentColor else Color.Gray.copy(alpha = 0.1f), RoundedCornerShape(30.dp)).clickable { selectedStatus = status }, contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(38.dp)
+                        .clip(RoundedCornerShape(30.dp))
+                        .background(if (isSelected) accentColor else chipContainerBg)
+                        .border(1.dp, if (isSelected) accentColor else Color.Gray.copy(alpha = 0.1f), RoundedCornerShape(30.dp))
+                        .clickable { selectedStatus = status }, 
+                    contentAlignment = Alignment.Center
+                ) {
                     Text(status, color = if (isSelected) Color.Black else textSecondary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
             }
@@ -82,7 +98,7 @@ fun AttendanceScreen(isDark: Boolean) {
         
         attendanceData.forEach { data ->
             AttendanceCard(data, isDark)
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(12.dp))
         }
         
         Spacer(Modifier.height(100.dp))
@@ -92,19 +108,21 @@ fun AttendanceScreen(isDark: Boolean) {
 @Composable
 fun AttendanceCard(data: Triple<String, Int, String>, isDark: Boolean) {
     val statusColor = when (data.third) { "SAFE" -> Color(0xFF00E676); "WARNING" -> Color(0xFFFFA000); else -> Color(0xFFFF5252) }
-    val boxBg = if (isDark) Color(0xFF162638) else Color(0xFFF0F4F8)
+    val boxBg = if (isDark) Color(0xFF162638) else Color(0xFFF1F4F9)
 
     Card(
-        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)),
+        modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(if (isDark) Color(0xFF111821) else Color.White),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = if (isDark) 0.dp else 2.dp),
+        border = if (!isDark) BorderStroke(1.dp, Color(0xFFE1E2EC).copy(alpha = 0.5f)) else null
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(12.dp)) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(boxBg, RoundedCornerShape(12.dp))
-                    .border(1.dp, Color.Gray.copy(0.1f), RoundedCornerShape(12.dp))
+                    .border(1.dp, Color.Gray.copy(0.05f), RoundedCornerShape(12.dp))
                     .padding(16.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -125,17 +143,18 @@ fun AttendanceCard(data: Triple<String, Int, String>, isDark: Boolean) {
                         Spacer(Modifier.height(8.dp))
                         Text(
                             data.first,
-                            color = if (isDark) Color.White else Color.Black,
+                            color = if (isDark) Color.White else Color(0xFF1A1C1E),
                             fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            lineHeight = 19.sp
                         )
                         Spacer(Modifier.height(8.dp))
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text("21MAB102T", color = Color(0xFF9AA4AE), fontSize = 12.sp)
-                            Text("  •  ", color = Color(0xFF9AA4AE))
+                            Text("21MAB102T", color = if (isDark) Color(0xFF9AA4AE) else Color(0xFF74777F), fontSize = 12.sp)
+                            Text("  •  ", color = Color.Gray.copy(alpha = 0.5f))
                             Text(
                                 "Skip 2",
-                                color = Color(0xFF00CFE8),
+                                color = if (isDark) Color(0xFF00CFE8) else Color(0xFF00BFA6),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold
                             )

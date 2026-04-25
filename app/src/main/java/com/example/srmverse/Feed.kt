@@ -2,10 +2,10 @@ package com.example.srmverse
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ViewQuilt
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.Link
@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
@@ -24,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun FeedScreen(isDark: Boolean) {
+fun FeedScreen(isDark: Boolean, onMenuClick: () -> Unit) {
 
     val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF5F7FA)
     val textSecondary = Color(0xFF9AA4AE)
@@ -38,10 +37,10 @@ fun FeedScreen(isDark: Boolean) {
             .fillMaxSize()
             .background(bgColor)
             .padding(horizontal = 16.dp)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
     ) {
         Spacer(Modifier.height(8.dp))
-        StandardHeader("Feed", "Campus community feed", isDark)
+        StandardHeader("Feed", "Campus community feed", isDark, onMenuClick)
         Spacer(Modifier.height(12.dp))
 
         // 🔹 SUMMARY ROW
@@ -82,7 +81,7 @@ fun FeedScreen(isDark: Boolean) {
         ) {
             Row(
                 modifier = Modifier
-                    .weight(0.65f) // Give chips specific weight for better balance
+                    .weight(0.65f)
                     .height(44.dp)
                     .background(chipContainerBg, RoundedCornerShape(30.dp))
                     .border(1.dp, Color.Gray.copy(alpha = 0.1f), RoundedCornerShape(30.dp))
@@ -115,7 +114,7 @@ fun FeedScreen(isDark: Boolean) {
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BFA6)),
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
-                    .weight(0.35f) // Balance with chips
+                    .weight(0.35f)
                     .height(44.dp),
                 contentPadding = PaddingValues(horizontal = 8.dp)
             ) {
@@ -202,7 +201,7 @@ fun FeedCard(item: FeedItem, isDark: Boolean) {
                             .background(Brush.linearGradient(listOf(Color(0xFF673AB7), Color(0xFF9C27B0))), CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        val initials = item.author.split(" ").mapNotNull { it.firstOrNull() }.joinToString("").take(2)
+                        val initials = item.author.split(" ").asSequence().mapNotNull { it.firstOrNull() }.joinToString("").take(2)
                         Text(initials, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                     }
                     Spacer(Modifier.width(12.dp))
@@ -251,7 +250,6 @@ fun FeedCard(item: FeedItem, isDark: Boolean) {
 
             if (item.hasImage) {
                 Spacer(Modifier.height(12.dp))
-                // Mocking the Microsoft Logo from screenshot
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

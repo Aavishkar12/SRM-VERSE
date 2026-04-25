@@ -6,11 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Assignment
-import androidx.compose.material.icons.outlined.Event
-import androidx.compose.material.icons.outlined.HistoryEdu
-import androidx.compose.material.icons.outlined.Newspaper
-import androidx.compose.material.icons.outlined.WatchLater
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -34,13 +31,13 @@ fun BottomBar(navController: NavController, isDark: Boolean) {
         val icon: androidx.compose.ui.graphics.vector.ImageVector
     )
 
-    // Icons kept exactly as requested
+    // Icons reordered and updated exactly as per screenshot
     val items = listOf(
-        BottomItem("attendance_main", "Attend", Icons.AutoMirrored.Filled.Assignment),
-        BottomItem("timetable", "Timetable", Icons.Outlined.WatchLater),
-        BottomItem("feed", "Home", Icons.Outlined.Newspaper),
-        BottomItem("marks", "Marks", Icons.Outlined.HistoryEdu),
-        BottomItem("calendar", "Calendar", Icons.Outlined.Event)
+        BottomItem("feed", "Home", Icons.Default.GridView),
+        BottomItem("attendance_main", "Attend", Icons.Default.Assignment),
+        BottomItem("timetable", "Timetable", Icons.Default.Schedule),
+        BottomItem("marks", "Marks", Icons.Default.BarChart),
+        BottomItem("calendar", "Calendar", Icons.Default.CalendarMonth)
     )
 
     val navBackStackEntry = navController.currentBackStackEntryAsState()
