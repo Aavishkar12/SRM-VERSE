@@ -32,9 +32,9 @@ fun AttendanceScreen(isDark: Boolean) {
     var selectedStatus by remember { mutableStateOf("All") }
 
     Column(modifier = Modifier.fillMaxSize().background(bgColor).padding(horizontal = 16.dp).verticalScroll(rememberScrollState())) {
-        Spacer(Modifier.height(56.dp))
+        Spacer(Modifier.height(8.dp))
         StandardHeader("Attendance", "Track your classes", isDark)
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(12.dp))
 
         SegmentedChips(listOf("All", "Theory", "Practical", "Predict"), selectedType, { selectedType = it }, isDark)
 
@@ -82,7 +82,7 @@ fun AttendanceScreen(isDark: Boolean) {
         
         attendanceData.forEach { data ->
             AttendanceCard(data, isDark)
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(10.dp))
         }
         
         Spacer(Modifier.height(100.dp))

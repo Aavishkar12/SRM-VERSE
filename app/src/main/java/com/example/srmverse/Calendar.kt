@@ -39,9 +39,9 @@ fun CalendarScreen(isDark: Boolean) {
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Spacer(Modifier.height(56.dp))
+        Spacer(Modifier.height(8.dp))
         StandardHeader("Calendar", "Day orders & events", isDark)
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(12.dp))
 
         // 🔹 SUMMARY ROW
         Row(

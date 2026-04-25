@@ -32,9 +32,9 @@ fun MarksScreen(isDark: Boolean) {
     var selectedStatus by remember { mutableStateOf("All") }
 
     Column(modifier = Modifier.fillMaxSize().background(bgColor).padding(horizontal = 16.dp).verticalScroll(rememberScrollState())) {
-        Spacer(Modifier.height(56.dp))
+        Spacer(Modifier.height(12.dp))
         StandardHeader("Marks", "Your internal scores", isDark)
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(12.dp))
 
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Text(buildAnnotatedString { withStyle(SpanStyle(accentColor, fontWeight = FontWeight.Bold)) { append("9 ") }; withStyle(SpanStyle(textSecondary)) { append("courses") } }, fontSize = 14.sp)
@@ -58,11 +58,22 @@ fun MarksScreen(isDark: Boolean) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             listOf("All", "Safe", "Low", "Critical").forEach { status ->
                 val isSelected = selectedStatus == status
-                Box(modifier = Modifier.weight(1f).height(38.dp).clip(RoundedCornerShape(30.dp)).background(if (isSelected) accentColor else chipContainerBg).border(1.dp, if (isSelected) accentColor else Color.Gray.copy(0.1f), RoundedCornerShape(30.dp)).clickable { selectedStatus = status }, contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(38.dp)
+                        .clip(RoundedCornerShape(30.dp))
+                        .background(if (isSelected) accentColor else chipContainerBg)
+                        .border(1.dp, if (isSelected) accentColor else Color.Gray.copy(alpha = 0.1f), RoundedCornerShape(30.dp))
+                        .clickable { selectedStatus = status },
+                    contentAlignment = Alignment.Center
+                ) {
                     Text(status, color = if (isSelected) Color.Black else textSecondary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
+
+        Spacer(Modifier.height(24.dp))
 
         val marksItems = listOf(
             MarksItem("Communicative English", "THEORY", "3 tests", "33/35", 94, "O"),
@@ -74,7 +85,7 @@ fun MarksScreen(isDark: Boolean) {
 
         marksItems.forEach { item ->
             MarksCard(item, isDark)
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(16.dp))
         }
 
         Spacer(Modifier.height(100.dp))
@@ -94,52 +105,54 @@ fun MarksCard(item: MarksItem, isDark: Boolean) {
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(boxBg, RoundedCornerShape(16.dp))
-                .border(1.dp, Color.Gray.copy(0.1f), RoundedCornerShape(16.dp))
-                .padding(16.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Surface(
-                            color = Color(0xFF00BFA6).copy(0.1f),
-                            shape = RoundedCornerShape(6.dp),
-                            border = BorderStroke(0.5.dp, Color(0xFF00BFA6).copy(0.3f))
-                        ) {
+        Column(modifier = Modifier.padding(10.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(boxBg, RoundedCornerShape(12.dp))
+                    .border(1.dp, Color.Gray.copy(0.1f), RoundedCornerShape(12.dp))
+                    .padding(14.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Surface(
+                                color = Color(0xFF00BFA6).copy(0.1f),
+                                shape = RoundedCornerShape(6.dp),
+                                border = BorderStroke(0.5.dp, Color(0xFF00BFA6).copy(0.3f))
+                            ) {
+                                Text(
+                                    item.type,
+                                    color = Color(0xFF00BFA6),
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.Black,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
+                            Spacer(Modifier.width(10.dp))
                             Text(
-                                item.type,
-                                color = Color(0xFF00BFA6),
-                                fontSize = 9.sp,
-                                fontWeight = FontWeight.Black,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                item.name,
+                                color = if (isDark) Color.White else Color.Black,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Bold,
+                                lineHeight = 19.sp,
+                                maxLines = 2
                             )
                         }
-                        Spacer(Modifier.width(10.dp))
-                        Text(
-                            item.name,
-                            color = if (isDark) Color.White else Color.Black,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            lineHeight = 18.sp,
-                            maxLines = 2
-                        )
+                        Spacer(Modifier.height(10.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.Analytics, null, tint = Color(0xFF9AA4AE), modifier = Modifier.size(13.dp))
+                            Spacer(Modifier.width(6.dp))
+                            Text(item.tests, color = Color(0xFF9AA4AE), fontSize = 12.sp)
+                            Text("  •  ", color = Color(0xFF9AA4AE))
+                            Text(item.score, color = Color(0xFF9AA4AE), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        }
                     }
-                    Spacer(Modifier.height(8.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Analytics, null, tint = Color(0xFF9AA4AE), modifier = Modifier.size(12.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text(item.tests, color = Color(0xFF9AA4AE), fontSize = 11.sp)
-                        Text("  •  ", color = Color(0xFF9AA4AE))
-                        Text(item.score, color = Color(0xFF9AA4AE), fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                    }
+                    Spacer(Modifier.width(12.dp))
+                    Box(Modifier.width(1.dp).height(45.dp).background(Color.Gray.copy(0.15f)))
+                    Spacer(Modifier.width(12.dp))
+                    CircularProgressBox(item.percentage, "Grade: ${item.grade}", statusColor)
                 }
-                Spacer(Modifier.width(16.dp))
-                Box(Modifier.width(1.dp).height(50.dp).background(Color.Gray.copy(0.15f)))
-                Spacer(Modifier.width(16.dp))
-                CircularProgressBox(item.percentage, "Grade: ${item.grade}", statusColor)
             }
         }
     }

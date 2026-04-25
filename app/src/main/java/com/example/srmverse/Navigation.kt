@@ -42,10 +42,14 @@ fun AppNavigation(
                 bottomBar = {
                     BottomBar(navController = bottomNavController, isDark = isDark)
                 }
-            ) { padding ->
-                // We use Box with fillMaxSize and ignore padding to allow the content 
-                // to flow behind the floating bottom bar
-                Box(modifier = Modifier.fillMaxSize()) {
+            ) { innerPadding ->
+                // We apply only the top padding to respect the status bar/system top insets
+                // while allowing the content to flow behind the floating bottom bar as intended
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = innerPadding.calculateTopPadding())
+                ) {
                     NavHost(
                         navController = bottomNavController,
                         startDestination = "attendance_main",
