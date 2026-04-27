@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 
 @Composable
-fun MarksScreen(isDark: Boolean, onMenuClick: () -> Unit) {
+fun MarksScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (String) -> Unit) {
     val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF8FAFD)
     val textPrimary = if (isDark) Color.White else Color(0xFF1A1C1E)
     val textSecondary = if (isDark) Color.White else Color(0xFF74777F)
@@ -30,7 +30,7 @@ fun MarksScreen(isDark: Boolean, onMenuClick: () -> Unit) {
 
     Column(modifier = Modifier.fillMaxSize().background(bgColor).padding(horizontal = 16.dp).verticalScroll(rememberScrollState())) {
         Spacer(Modifier.height(12.dp))
-        StandardHeader("Marks", "Your internal scores", isDark, onMenuClick)
+        StandardHeader("Marks", "Your internal scores", isDark, onMenuClick, onNavigate)
         Spacer(Modifier.height(20.dp))
 
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {

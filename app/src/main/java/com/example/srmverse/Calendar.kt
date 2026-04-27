@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CalendarScreen(isDark: Boolean, onMenuClick: () -> Unit) {
+fun CalendarScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (String) -> Unit) {
 
     val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF5F7FA)
     val textPrimary = if (isDark) Color.White else Color.Black
@@ -40,7 +40,7 @@ fun CalendarScreen(isDark: Boolean, onMenuClick: () -> Unit) {
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(Modifier.height(8.dp))
-        StandardHeader("Calendar", "Day orders & events", isDark, onMenuClick)
+        StandardHeader("Calendar", "Day orders & events", isDark, onMenuClick, onNavigate)
         Spacer(Modifier.height(12.dp))
 
         // 🔹 SUMMARY ROW

@@ -69,29 +69,64 @@ fun AppNavigation(
                     ) {
                         NavHost(
                             navController = bottomNavController,
-                            startDestination = "attendance_main",
+                            startDestination = "dashboard",
                             modifier = Modifier.fillMaxSize()
                         ) {
+                            composable("dashboard") {
+                                DashboardScreen(
+                                    isDark = isDark,
+                                    onMenuClick = { scope.launch { drawerState.open() } },
+                                    onNavigate = { route -> bottomNavController.navigate(route) }
+                                )
+                            }
                             composable("attendance_main") {
-                                AttendanceScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } })
+                                AttendanceScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } }, onNavigate = { route -> bottomNavController.navigate(route) })
                             }
                             composable("timetable") {
-                                TimetableScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } })
+                                TimetableScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } }, onNavigate = { route -> bottomNavController.navigate(route) })
                             }
                             composable("feed") {
-                                FeedScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } })
+                                FeedScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } }, onNavigate = { route -> bottomNavController.navigate(route) })
                             }
                             composable("marks") {
-                                MarksScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } })
+                                MarksScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } }, onNavigate = { route -> bottomNavController.navigate(route) })
                             }
                             composable("calendar") {
-                                CalendarScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } })
+                                CalendarScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } }, onNavigate = { route -> bottomNavController.navigate(route) })
                             }
                             composable("elibrary") {
-                                ELibraryScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } })
+                                ELibraryScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } }, onNavigate = { route -> bottomNavController.navigate(route) })
                             }
                             composable("internships") {
-                                InternshipsScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } })
+                                InternshipsScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } }, onNavigate = { route -> bottomNavController.navigate(route) })
+                            }
+                            composable("hackathons") {
+                                HackathonsScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } }, onNavigate = { route -> bottomNavController.navigate(route) })
+                            }
+                            composable("teamfinder") {
+                                TeamFinderScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } }, onNavigate = { route -> bottomNavController.navigate(route) })
+                            }
+                            composable("conferences") {
+                                ConferencesScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } }, onNavigate = { route -> bottomNavController.navigate(route) })
+                            }
+                            composable("technews") {
+                                TechNewsScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } }, onNavigate = { route -> bottomNavController.navigate(route) })
+                            }
+                            composable("marketplace") {
+                                MarketplaceScreen(isDark = isDark, onMenuClick = { scope.launch { drawerState.open() } }, onNavigate = { route -> bottomNavController.navigate(route) })
+                            }
+                            composable("profile") {
+                                ProfileScreen(
+                                    isDark = isDark,
+                                    onMenuClick = { scope.launch { drawerState.open() } },
+                                    onNavigate = { route -> bottomNavController.navigate(route) },
+                                    onSignOut = {
+                                        scope.launch { drawerState.close() }
+                                        navController.navigate("login") {
+                                            popUpTo("attendance") { inclusive = true }
+                                        }
+                                    }
+                                )
                             }
                         }
                     }

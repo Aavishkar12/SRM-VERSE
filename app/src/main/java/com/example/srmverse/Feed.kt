@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun FeedScreen(isDark: Boolean, onMenuClick: () -> Unit) {
+fun FeedScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (String) -> Unit) {
 
     val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF5F7FA)
     val textSecondary = Color(0xFF9AA4AE)
@@ -40,7 +40,7 @@ fun FeedScreen(isDark: Boolean, onMenuClick: () -> Unit) {
             .verticalScroll(rememberScrollState()),
     ) {
         Spacer(Modifier.height(8.dp))
-        StandardHeader("Feed", "Campus community feed", isDark, onMenuClick)
+        StandardHeader("Feed", "Campus community feed", isDark, onMenuClick, onNavigate)
         Spacer(Modifier.height(12.dp))
 
         // 🔹 SUMMARY ROW

@@ -18,14 +18,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 
 @Composable
-fun TeamFinderScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (String) -> Unit) {
+fun MarketplaceScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (String) -> Unit) {
     val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF5F7FA)
     val textPrimary = if (isDark) Color.White else Color.Black
     val textSecondary = Color(0xFF9AA4AE)
     val chipContainerBg = if (isDark) Color(0xFF1A222B) else Color(0xFFEDEFF2)
     val tealColor = Color(0xFF00BFA6)
 
-    var selectedTab by remember { mutableStateOf("All") }
+    var selectedTab by remember { mutableStateOf("Available") }
 
     Column(
         modifier = Modifier
@@ -57,17 +57,16 @@ fun TeamFinderScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (Stri
                             .padding(8.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        // Using ViewColumn as a proxy for the layout icon in screenshot
                         Icon(Icons.Default.ViewColumn, null, tint = tealColor, modifier = Modifier.size(24.dp))
                     }
                     Spacer(Modifier.width(12.dp))
                     Column {
-                        Text("Team Finder", color = textPrimary, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                        Text("Find partners for your hackathon", color = textSecondary, fontSize = 12.sp)
+                        Text("Marketplace", color = textPrimary, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text("Buy and sell items on campus", color = textSecondary, fontSize = 12.sp)
                     }
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = {}) { Icon(Icons.Default.AutoAwesome, null, tint = textSecondary, modifier = Modifier.size(20.dp)) }
+                    IconButton(onClick = { onNavigate("feed") }) { Icon(Icons.Default.AutoAwesome, null, tint = textSecondary, modifier = Modifier.size(20.dp)) }
                     IconButton(onClick = {}) { Icon(Icons.Default.Notifications, null, tint = textSecondary, modifier = Modifier.size(22.dp)) }
                     IconButton(onClick = {}) { Icon(Icons.Default.Settings, null, tint = textSecondary, modifier = Modifier.size(22.dp)) }
                 }
@@ -76,24 +75,11 @@ fun TeamFinderScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (Stri
 
         Spacer(Modifier.height(16.dp))
 
-        // 🔹 OPPORTUNITIES SUMMARY
-        Row(
+        // 🔹 REFRESH ROW
+        Box(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            contentAlignment = Alignment.CenterEnd
         ) {
-            Text(
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(color = tealColor, fontWeight = FontWeight.Bold)) {
-                        append("0 ")
-                    }
-                    withStyle(style = SpanStyle(color = textSecondary)) {
-                        append("opportunities found")
-                    }
-                },
-                fontSize = 14.sp
-            )
-
             IconButton(
                 onClick = { },
                 modifier = Modifier
@@ -104,9 +90,9 @@ fun TeamFinderScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (Stri
             }
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(8.dp))
 
-        // 🔹 TABS AND POST BUTTON
+        // 🔹 TABS AND SELL BUTTON
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -122,7 +108,7 @@ fun TeamFinderScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (Stri
                     modifier = Modifier.fillMaxSize().padding(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    listOf("All", "My Posts", "Hackathons").forEach { option ->
+                    listOf("Available", "Sold", "My Listings").forEach { option ->
                         val isSelected = option == selectedTab
                         Box(
                             modifier = Modifier
@@ -144,7 +130,7 @@ fun TeamFinderScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (Stri
                 }
             }
 
-            // Post Button
+            // Sell Button
             Button(
                 onClick = { },
                 colors = ButtonDefaults.buttonColors(containerColor = tealColor),
@@ -154,7 +140,7 @@ fun TeamFinderScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (Stri
             ) {
                 Icon(Icons.Default.Add, null, tint = Color.White, modifier = Modifier.size(20.dp))
                 Spacer(Modifier.width(4.dp))
-                Text("Post", color = Color.White, fontWeight = FontWeight.Bold)
+                Text("Sell", color = Color.White, fontWeight = FontWeight.Bold)
             }
         }
 
@@ -174,14 +160,14 @@ fun TeamFinderScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (Stri
                 Icon(Icons.Default.Search, null, tint = textSecondary, modifier = Modifier.size(20.dp))
                 Spacer(Modifier.width(12.dp))
                 Text(
-                    "Search by event, description or skills...",
+                    "Search marketplace...",
                     color = textSecondary,
                     fontSize = 14.sp
                 )
             }
         }
 
-        Spacer(Modifier.height(80.dp))
+        Spacer(Modifier.height(100.dp))
 
         // 🔹 EMPTY STATE
         Column(
@@ -189,14 +175,14 @@ fun TeamFinderScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (Stri
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                "No Requests Found",
+                "No Listings Found",
                 color = textPrimary,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                "Be the first to post a teammate request or\ntry searching for another event!",
+                "Be the first to list something or try\nsearching for another item.",
                 color = textSecondary,
                 fontSize = 14.sp,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,

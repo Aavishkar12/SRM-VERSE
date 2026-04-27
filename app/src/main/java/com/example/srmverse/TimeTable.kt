@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 
 @Composable
-fun TimetableScreen(isDark: Boolean, onMenuClick: () -> Unit) {
+fun TimetableScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (String) -> Unit) {
     val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF5F7FA)
     val textPrimary = if (isDark) Color.White else Color.Black
     val textSecondary = Color(0xFF9AA4AE)
@@ -31,7 +31,7 @@ fun TimetableScreen(isDark: Boolean, onMenuClick: () -> Unit) {
 
     Column(modifier = Modifier.fillMaxSize().background(bgColor).padding(horizontal = 16.dp).verticalScroll(rememberScrollState())) {
         Spacer(Modifier.height(12.dp))
-        StandardHeader("Timetable", "Your weekly schedule", isDark, onMenuClick)
+        StandardHeader("Timetable", "Your weekly schedule", isDark, onMenuClick, onNavigate)
         Spacer(Modifier.height(12.dp))
 
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {

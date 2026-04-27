@@ -33,7 +33,7 @@ fun BottomBar(navController: NavController, isDark: Boolean) {
 
     // Icons reordered and updated exactly as per screenshot
     val items = listOf(
-        BottomItem("feed", "Home", Icons.Default.GridView),
+        BottomItem("dashboard", "Home", Icons.Default.GridView),
         BottomItem("attendance_main", "Attend", Icons.Default.Assignment),
         BottomItem("timetable", "Timetable", Icons.Default.Schedule),
         BottomItem("marks", "Marks", Icons.Default.BarChart),

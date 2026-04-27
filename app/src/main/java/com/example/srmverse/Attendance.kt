@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 
 @Composable
-fun AttendanceScreen(isDark: Boolean, onMenuClick: () -> Unit) {
+fun AttendanceScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (String) -> Unit) {
     val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF8FAFD)
     val textPrimary = if (isDark) Color.White else Color(0xFF1A1C1E)
     val textSecondary = if (isDark) Color(0xFF9AA4AE) else Color(0xFF74777F)
@@ -32,7 +32,43 @@ fun AttendanceScreen(isDark: Boolean, onMenuClick: () -> Unit) {
 
     Column(modifier = Modifier.fillMaxSize().background(bgColor).padding(horizontal = 16.dp).verticalScroll(rememberScrollState())) {
         Spacer(Modifier.height(12.dp))
-        StandardHeader("Attendance", "Track your classes", isDark, onMenuClick)
+        
+        // 🔹 HEADER
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = if (isDark) Color(0xFF162638) else Color.White),
+            elevation = CardDefaults.cardElevation(if (isDark) 4.dp else 2.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .border(1.dp, accentColor.copy(alpha = 0.5f), RoundedCornerShape(10.dp))
+                            .clickable { onMenuClick() }
+                            .padding(8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(Icons.Default.ViewColumn, null, tint = accentColor, modifier = Modifier.size(24.dp))
+                    }
+                    Spacer(Modifier.width(12.dp))
+                    Column {
+                        Text("Attendance", color = textPrimary, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text("Track your classes", color = textSecondary, fontSize = 12.sp)
+                    }
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = { onNavigate("feed") }) { Icon(Icons.Default.AutoAwesome, null, tint = textSecondary, modifier = Modifier.size(20.dp)) }
+                    IconButton(onClick = {}) { Icon(Icons.Default.Notifications, null, tint = textSecondary, modifier = Modifier.size(22.dp)) }
+                    IconButton(onClick = {}) { Icon(Icons.Default.Settings, null, tint = textSecondary, modifier = Modifier.size(22.dp)) }
+                }
+            }
+        }
         Spacer(Modifier.height(20.dp))
 
         SegmentedChips(listOf("All", "Theory", "Practical", "Predict"), selectedType, { selectedType = it }, isDark)

@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ELibraryScreen(isDark: Boolean, onMenuClick: () -> Unit) {
+fun ELibraryScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (String) -> Unit) {
     val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF5F7FA)
     val textPrimary = if (isDark) Color.White else Color.Black
     val textSecondary = Color(0xFF9AA4AE)
@@ -40,7 +40,7 @@ fun ELibraryScreen(isDark: Boolean, onMenuClick: () -> Unit) {
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(Modifier.height(16.dp))
-        StandardHeader("E-Library", "Unlock exclusive study materials", isDark, onMenuClick)
+        StandardHeader("E-Library", "Unlock exclusive study materials", isDark, onMenuClick, onNavigate)
         Spacer(Modifier.height(20.dp))
 
         // 🔹 SUMMARY ROW

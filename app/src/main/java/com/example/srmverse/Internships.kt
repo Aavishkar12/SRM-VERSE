@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun InternshipsScreen(isDark: Boolean, onMenuClick: () -> Unit) {
+fun InternshipsScreen(isDark: Boolean, onMenuClick: () -> Unit, onNavigate: (String) -> Unit) {
     val bgColor = if (isDark) Color(0xFF0B0F14) else Color(0xFFF5F7FA)
     val textPrimary = if (isDark) Color.White else Color.Black
     val textSecondary = Color(0xFF9AA4AE)
@@ -37,7 +37,7 @@ fun InternshipsScreen(isDark: Boolean, onMenuClick: () -> Unit) {
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(Modifier.height(16.dp))
-        StandardHeader("Internships", "Find your dream internship", isDark, onMenuClick)
+        StandardHeader("Internships", "Find your dream internship", isDark, onMenuClick, onNavigate)
         Spacer(Modifier.height(20.dp))
 
         // 🔹 CATEGORY HEADER
